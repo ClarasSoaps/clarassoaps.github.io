@@ -1,13 +1,18 @@
 // EXTRA CREAMY smooth animations for Clara's Soap
 
 // Page load animation - fade in smoothly
-document.addEventListener('DOMContentLoaded', function() {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)';
-    
-    setTimeout(() => {
+window.addEventListener('pageshow', function(event) {
+    // Handle both regular loads and back/forward navigation
+    if (event.persisted) {
         document.body.style.opacity = '1';
-    }, 10);
+    } else {
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        requestAnimationFrame(() => {
+            document.body.style.opacity = '1';
+        });
+    }
 });
 
 // Smooth scroll with easing
@@ -78,26 +83,17 @@ document.querySelectorAll('.scroll-reveal').forEach(el => {
     observer.observe(el);
 });
 
-// Smooth navbar show/hide on scroll
-let lastScroll = 0;
+// Add subtle shadow to navbar on scroll
 const navbar = document.querySelector('.navbar');
 if (navbar) {
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
         
-        if (currentScroll <= 0) {
-            navbar.style.transform = 'translateY(0)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        } else if (currentScroll > lastScroll && currentScroll > 100) {
-            // Scrolling down - hide navbar
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            // Scrolling up - show navbar with shadow
-            navbar.style.transform = 'translateY(0)';
+        if (currentScroll > 10) {
             navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+        } else {
+            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
         }
-        
-        lastScroll = currentScroll;
     }, { passive: true });
 }
 
@@ -142,21 +138,21 @@ flowers.forEach((flower, index) => {
 
 // Smooth page transitions
 let isTransitioning = false;
-document.querySelectorAll('a').forEach(link => {
+document.querySelectorAll('a:not([onclick]):not([href^="#"]):not([href^="mailto"]):not([href^="tel"])').forEach(link => {
     const href = link.getAttribute('href');
-    if (href && href.endsWith('.html') && !link.target) {
+    if (href && (href.endsWith('.html') || href.indexOf('.html?') > -1) && !link.target) {
         link.addEventListener('click', function(e) {
             if (isTransitioning) return;
             
             e.preventDefault();
             isTransitioning = true;
             
-            document.body.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.6, 1)';
+            document.body.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)';
             document.body.style.opacity = '0';
             
             setTimeout(() => {
                 window.location.href = href;
-            }, 500);
+            }, 250);
         });
     }
 });
