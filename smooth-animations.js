@@ -78,14 +78,27 @@ document.querySelectorAll('.scroll-reveal').forEach(el => {
     observer.observe(el);
 });
 
-// Add parallax effect to landing logo
-const landingLogo = document.querySelector('.landing-logo');
-if (landingLogo) {
+// Smooth navbar show/hide on scroll
+let lastScroll = 0;
+const navbar = document.querySelector('.navbar');
+if (navbar) {
     window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * 0.3;
-        landingLogo.style.transform = `translateY(${rate}px) scale(${1 + scrolled * 0.0001})`;
-    });
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll <= 0) {
+            navbar.style.transform = 'translateY(0)';
+            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        } else if (currentScroll > lastScroll && currentScroll > 100) {
+            // Scrolling down - hide navbar
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            // Scrolling up - show navbar with shadow
+            navbar.style.transform = 'translateY(0)';
+            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+        }
+        
+        lastScroll = currentScroll;
+    }, { passive: true });
 }
 
 // Smooth number counter for cart badge

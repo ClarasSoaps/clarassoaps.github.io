@@ -139,7 +139,13 @@ img {
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.4s ease;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="dark"] .navbar {
+    background-color: rgba(58, 51, 46, 0.95);
 }
 
 .nav-container {
