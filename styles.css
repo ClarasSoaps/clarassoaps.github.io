@@ -927,8 +927,28 @@ img {
 }
 
 .value-icon {
-    font-size: 3rem;
     margin-bottom: var(--spacing-sm);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.value-icon svg {
+    color: var(--gold);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.value-card:hover .value-icon svg {
+    transform: scale(1.15);
+    color: var(--primary-pink);
+}
+
+[data-theme="dark"] .value-icon svg {
+    color: var(--gold-light);
+}
+
+[data-theme="dark"] .value-card:hover .value-icon svg {
+    color: var(--primary-pink);
 }
 
 .value-card h3 {
