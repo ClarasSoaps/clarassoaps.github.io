@@ -394,6 +394,10 @@ img {
     font-style: italic;
 }
 
+[data-theme="dark"] .landing-tagline {
+    color: var(--gold-light);
+}
+
 .scroll-indicator {
     position: absolute;
     bottom: 40px;
@@ -404,6 +408,10 @@ img {
     cursor: pointer;
     z-index: 2;
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme="dark"] .scroll-indicator {
+    color: var(--gold-light);
 }
 
 .scroll-indicator:hover {
@@ -705,6 +713,10 @@ img {
     margin-bottom: var(--spacing-lg);
 }
 
+[data-theme="dark"] .seasonal-description {
+    color: var(--text-primary);
+}
+
 .seasonal-products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -767,6 +779,11 @@ img {
     background: linear-gradient(135deg, var(--accent-pink) 0%, var(--gold-light) 100%);
     padding: var(--spacing-lg) var(--spacing-md);
     text-align: center;
+    transition: background 0.4s ease;
+}
+
+[data-theme="dark"] .page-header {
+    background: linear-gradient(135deg, #3A2E28 0%, #4D3A2F 100%);
 }
 
 .page-header h1 {
@@ -774,9 +791,18 @@ img {
     margin-bottom: 0.5rem;
 }
 
+[data-theme="dark"] .page-header h1 {
+    color: var(--gold-light);
+    text-shadow: 0 2px 10px rgba(230, 200, 150, 0.3);
+}
+
 .page-header p {
     font-size: 1.125rem;
     color: var(--brown);
+}
+
+[data-theme="dark"] .page-header p {
+    color: var(--text-primary);
 }
 
 .bundle-notice {
@@ -784,6 +810,10 @@ img {
     color: var(--gold);
     font-weight: 600;
     margin-top: 0.5rem;
+}
+
+[data-theme="dark"] .bundle-notice {
+    color: var(--gold-light);
 }
 
 /* ========================================
