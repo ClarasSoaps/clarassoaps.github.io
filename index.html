@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clara's Soap - Handcrafted Soaps for All Seasons</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <img src="Claras_Soap_Logo.png" alt="Clara's Soap">
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()" aria-label="Shopping cart">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Full Screen Logo Landing -->
+        <section class="logo-landing">
+            <!-- Floating Floral Elements -->
+            <div class="floating-flowers">
+                <span class="flower flower-1">✿</span>
+                <span class="flower flower-2">❀</span>
+                <span class="flower flower-3">✿</span>
+                <span class="flower flower-4">❀</span>
+            </div>
+            
+            <div class="landing-content">
+                <img src="Claras_Soap_Logo.png" alt="Clara's Soap" class="landing-logo">
+                <p class="landing-tagline">Handcrafted with Love</p>
+            </div>
+            
+            <div class="scroll-indicator">
+                <span>↓</span>
+                <p class="scroll-text">Scroll to Explore</p>
+            </div>
+        </section>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Handcrafted Soaps for All Seasons</h1>
+                <p class="hero-subtitle">Luxurious, natural soaps made with love</p>
+                <a href="shop.html" class="btn btn-primary">Shop Now</a>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="featured-section scroll-reveal">
+            <h2 class="section-title">Featured Soaps</h2>
+            <div class="products-grid">
+                <div class="product-card" data-product-id="lavender">
+                    <div class="product-image">
+                        <img src="images/lavender.jpg" alt="Lavender Soap" onerror="this.src='images/placeholder.jpg'">
+                        <button class="quick-add" onclick="quickAddToCart('lavender')">Quick Add</button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Lavender</h3>
+                        <p class="product-price">$6.00</p>
+                        <a href="product.html?id=lavender" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="cedarwood">
+                    <div class="product-image">
+                        <img src="images/cedarwood.jpg" alt="Cedarwood Soap" onerror="this.src='images/placeholder.jpg'">
+                        <button class="quick-add" onclick="quickAddToCart('cedarwood')">Quick Add</button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Cedarwood, Frankincense & Patchouli</h3>
+                        <p class="product-price">$6.00</p>
+                        <a href="product.html?id=cedarwood" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="lemongrass-strawflower">
+                    <div class="product-image">
+                        <img src="images/lemongrass-strawflower.jpg" alt="Lemongrass with Strawflower Petals" onerror="this.src='images/placeholder.jpg'">
+                        <button class="quick-add" onclick="quickAddToCart('lemongrass-strawflower')">Quick Add</button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Lemongrass with Strawflower Petals</h3>
+                        <p class="product-price">$6.00</p>
+                        <a href="product.html?id=lemongrass-strawflower" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+
+                <div class="product-card" data-product-id="cucumber-melon">
+                    <div class="product-image">
+                        <img src="images/cucumber-melon.jpg" alt="Cucumber Melon Soap" onerror="this.src='images/placeholder.jpg'">
+                        <button class="quick-add" onclick="quickAddToCart('cucumber-melon')">Quick Add</button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Cucumber Melon</h3>
+                        <p class="product-price">$6.00</p>
+                        <a href="product.html?id=cucumber-melon" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seasonal Highlight -->
+        <section class="seasonal-section scroll-reveal">
+            <div class="seasonal-content">
+                <h2 class="section-title">Seasonal Favorites</h2>
+                <p class="seasonal-description">Limited-time scents crafted for the season</p>
+                <div class="seasonal-products">
+                    <div class="product-card seasonal" data-product-id="peppermint">
+                        <div class="seasonal-badge">Seasonal</div>
+                        <div class="product-image">
+                            <img src="images/peppermint.jpg" alt="Peppermint Soap" onerror="this.src='images/placeholder.jpg'">
+                            <button class="quick-add" onclick="quickAddToCart('peppermint')">Quick Add</button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Peppermint</h3>
+                            <p class="product-price">$6.00</p>
+                            <a href="product.html?id=peppermint" class="btn btn-secondary">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card seasonal" data-product-id="sugar-cookie">
+                        <div class="seasonal-badge">Seasonal</div>
+                        <div class="product-image">
+                            <img src="images/sugar-cookie.jpg" alt="Sugar Cookie Soap" onerror="this.src='images/placeholder.jpg'">
+                            <button class="quick-add" onclick="quickAddToCart('sugar-cookie')">Quick Add</button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Sugar Cookie</h3>
+                            <p class="product-price">$6.00</p>
+                            <a href="product.html?id=sugar-cookie" class="btn btn-secondary">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card seasonal" data-product-id="christmas-wreath">
+                        <div class="seasonal-badge">Seasonal</div>
+                        <div class="product-image">
+                            <img src="images/christmas-wreath.jpg" alt="Christmas Wreath Soap" onerror="this.src='images/placeholder.jpg'">
+                            <button class="quick-add" onclick="quickAddToCart('christmas-wreath')">Quick Add</button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Christmas Wreath</h3>
+                            <p class="product-price">$6.00</p>
+                            <a href="product.html?id=christmas-wreath" class="btn btn-secondary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup -->
+        <section class="newsletter-section scroll-reveal">
+            <div class="newsletter-content">
+                <h2>Stay Updated</h2>
+                <p>Be the first to know about new scents and seasonal releases</p>
+                <form class="newsletter-form" onsubmit="handleNewsletterSignup(event)">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-primary">Notify Me</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="Claras_Soap_Logo.png" alt="Clara's Soap">
+                <p>Handcrafted with love by a young entrepreneur</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Customer Care</h4>
+                <ul>
+                    <li><a href="faq.html#shipping">Shipping Info</a></li>
+                    <li><a href="faq.html#returns">Returns</a></li>
+                    <li><a href="faq.html#ingredients">Ingredients</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Clara's Soap. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-totals">
+                <div class="subtotal">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="discount" id="cartDiscount" style="display: none;">
+                    <span>Bundle Discount:</span>
+                    <span id="cartDiscountAmount">$0.00</span>
+                </div>
+                <div class="total">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <a href="checkout.html" class="btn btn-primary btn-block">Checkout</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        // Smooth scroll when clicking the scroll indicator
+        document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
+            document.querySelector('.hero').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all scroll-reveal elements
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Stagger product card animations
+        document.querySelectorAll('.product-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    </script>
+    
+    <script>
+        // Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Load saved theme on page load
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</body>
+</html>

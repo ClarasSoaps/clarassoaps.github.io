@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Clara's Soap</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <img src="Claras_Soap_Logo.png" alt="Clara's Soap">
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="faq.html" class="active">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()" aria-label="Shopping cart">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>Frequently Asked Questions</h1>
+        </section>
+
+        <section class="faq-section">
+            <div class="faq-container">
+                <div class="faq-item" id="ingredients">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        What ingredients are in your soaps?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>All Clara's Soap bars are made with high-quality natural ingredients including:</p>
+                        <ul>
+                            <li>Olive oil, coconut oil, and shea butter for moisturizing</li>
+                            <li>Pure essential oils for natural fragrance</li>
+                            <li>Natural colorants derived from plants and minerals</li>
+                            <li>Botanicals like strawflower petals, oats, and other natural exfoliants</li>
+                        </ul>
+                        <p>We never use synthetic fragrances, parabens, sulfates, or harsh chemicals.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        Are your soaps safe for sensitive skin?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Yes! Our soaps are made with gentle, natural ingredients that are suitable for most skin types, including sensitive skin. However, if you have specific allergies or skin conditions, we recommend checking the ingredient list for each soap or consulting with your dermatologist.</p>
+                        <p>All ingredients are clearly listed on our product pages.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" id="shipping">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        What are your shipping options?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>We offer several shipping options:</p>
+                        <ul>
+                            <li><strong>Standard Shipping:</strong> Flat-rate base fee plus a small increase per soap. Typically arrives in 5-7 business days.</li>
+                            <li><strong>Express Shipping:</strong> Available for faster delivery (2-3 business days) at an additional cost.</li>
+                            <li><strong>Local Pickup:</strong> Free! Pick up your order at our farm (often available when purchasing flowers as well).</li>
+                            <li><strong>Church Delivery:</strong> Free delivery available for church members.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        How does the bundle discount work?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Our soaps are $6 each, or you can get 4 for $20 (saving $4!). The discount is applied automatically when you add 4 or more soaps to your cart. You can mix and match any scents you like.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        What payment methods do you accept?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>We accept:</p>
+                        <ul>
+                            <li>Credit and debit cards (Visa, Mastercard, American Express, Discover)</li>
+                            <li>PayPal</li>
+                            <li>Venmo</li>
+                            <li>Other common payment methods through our secure checkout</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        Can I add gift wrapping to my order?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Yes! We offer beautiful gift wrapping with dried flowers and leaves for a small additional fee. You can select this option during checkout.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        What are seasonal soaps?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Seasonal soaps are special scents available only during certain times of the year. These include:</p>
+                        <ul>
+                            <li><strong>Peppermint:</strong> Winter/Holiday season</li>
+                            <li><strong>Sugar Cookie:</strong> Holiday season</li>
+                            <li><strong>Christmas Wreath:</strong> Holiday season</li>
+                        </ul>
+                        <p>When seasonal soaps are out of season, they'll show as "out of stock" on our website. Sign up for notifications to be alerted when they return!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        How do I stay updated on new releases?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Sign up for our notification list on the home page! You'll be the first to know about new scents, seasonal releases, and special offers.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        How should I store my soap?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>To make your soap last longer:</p>
+                        <ul>
+                            <li>Keep it in a well-drained soap dish between uses</li>
+                            <li>Store unused bars in a cool, dry place</li>
+                            <li>Avoid leaving it in standing water</li>
+                            <li>Let it dry completely between uses</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item" id="returns">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        What is your return policy?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>We want you to love your Clara's Soap! If you're not completely satisfied with your purchase, please contact us within 14 days of receiving your order. We'll work with you to find a solution.</p>
+                        <p>Due to the nature of handmade soap, we cannot accept returns on used products, but we're happy to address any quality concerns.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        How long does a bar of soap last?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>With proper care and storage, one bar typically lasts 3-4 weeks with daily use. Handmade soaps last longer than commercial soaps because they retain their natural glycerin and moisturizing oils.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        Do you offer wholesale or bulk orders?
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>Yes! If you're interested in wholesale pricing or bulk orders for events, gifts, or retail, please <a href="contact.html">contact us</a> directly and we'll create a custom quote for you.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="Claras_Soap_Logo.png" alt="Clara's Soap">
+                <p>Handcrafted with love by a young entrepreneur</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Customer Care</h4>
+                <ul>
+                    <li><a href="faq.html#shipping">Shipping Info</a></li>
+                    <li><a href="faq.html#returns">Returns</a></li>
+                    <li><a href="faq.html#ingredients">Ingredients</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Clara's Soap. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-totals">
+                <div class="subtotal">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="discount" id="cartDiscount" style="display: none;">
+                    <span>Bundle Discount:</span>
+                    <span id="cartDiscountAmount">$0.00</span>
+                </div>
+                <div class="total">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <a href="checkout.html" class="btn btn-primary btn-block">Checkout</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isOpen = faqItem.classList.contains('open');
+            
+            // Close all other FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('open');
+            });
+            
+            // Toggle current item
+            if (!isOpen) {
+                faqItem.classList.add('open');
+            }
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</body>
+</html>
