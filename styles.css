@@ -124,7 +124,6 @@ a:hover {
 }
 
 img {
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
     max-width: 100%;
     height: auto;
     display: block;
@@ -462,6 +461,7 @@ img {
 }
 
 .landing-logo {
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
     max-width: 600px;
     width: 80vw;
     height: auto;
