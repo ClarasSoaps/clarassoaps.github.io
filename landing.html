@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clara's Soap - Handcrafted with Love</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #C54174;
+            --primary-pink-dark: #D89EB3;
+            --accent-pink: #F5D4E1;
+            --brown: #8B6F47;
+            --brown-dark: #6B5638;
+            --gold: #C9A961;
+            --cream: #FAF7F2;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor.hover {
+            width: 50px;
+            height: 50px;
+            background: rgba(197, 65, 116, 0.1);
+        }
+
+        /* 3D Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Content Layer */
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section with 3D Soap */
+        .hero-3d {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-text {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.5s;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-text h1 {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--brown-dark);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .hero-text .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--brown);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-pink-dark));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(197, 65, 116, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(197, 65, 116, 0.4);
+        }
+
+        /* Floating Petals */
+        .petal {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(100px, -100px) rotate(90deg);
+            }
+            50% {
+                transform: translate(-50px, -200px) rotate(180deg);
+            }
+            75% {
+                transform: translate(150px, -150px) rotate(270deg);
+            }
+        }
+
+        /* Wave Divider */
+        .wave {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .wave svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 150px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: white;
+            position: relative;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(197, 65, 116, 0.1);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(197, 65, 116, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cormorant', serif;
+            font-size: 1.8rem;
+            color: var(--brown-dark);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--brown);
+            line-height: 1.6;
+        }
+
+        /* Products Preview */
+        .products-preview {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--cream));
+        }
+
+        .section-title {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section-title.visible {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .products-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+        }
+
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(197, 65, 116, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: var(--accent-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2));
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .product-card:hover .product-image::before {
+            transform: translateX(100%);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            color: var(--brown-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            font-size: 2rem;
+            color: var(--brown);
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            
+            .custom-cursor {
+                display: none;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Floating Petals -->
+    <div class="petal" style="top: 10%; left: 10%; animation-delay: 0s;">✿</div>
+    <div class="petal" style="top: 20%; left: 80%; animation-delay: 2s;">❀</div>
+    <div class="petal" style="top: 60%; left: 15%; animation-delay: 4s;">✿</div>
+    <div class="petal" style="top: 70%; left: 85%; animation-delay: 6s;">❀</div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Hero Section -->
+        <section class="hero-3d">
+            <div class="hero-text">
+                <h1>Clara's Soap</h1>
+                <p class="subtitle">Handcrafted with Love, Infused with Nature</p>
+                <a href="#products" class="cta-button">Explore Our Soaps</a>
+            </div>
+            <div class="scroll-indicator">↓</div>
+        </section>
+
+        <!-- Wave Divider -->
+        <div class="wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌿</div>
+                    <h3>All Natural</h3>
+                    <p>Made with pure essential oils, organic ingredients, and love. No harsh chemicals, ever.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💝</div>
+                    <h3>Handcrafted</h3>
+                    <p>Each bar is carefully crafted by hand, making every soap unique and special.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3>Luxurious</h3>
+                    <p>Experience spa-quality skincare at home with our nourishing, aromatic soaps.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Preview -->
+        <section class="products-preview" id="products">
+            <h2 class="section-title">Our Signature Soaps</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">🌸</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Lavender</h3>
+                        <p class="product-price">$6.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🌲</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Cedarwood</h3>
+                        <p class="product-price">$6.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🍋</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Lemongrass</h3>
+                        <p class="product-price">$6.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🥒</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Cucumber Melon</h3>
+                        <p class="product-price">$6.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover effect for interactive elements
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Three.js Scene
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0xC54174, 0.6);
+        pointLight.position.set(-3, 3, 3);
+        scene.add(pointLight);
+
+        // Morphing Soap Bar
+        const soapColors = [
+            0xb19cd9, // Lavender
+            0x8b6f47, // Cedarwood
+            0xffd700, // Lemongrass
+            0x98d8c8, // Cucumber
+            0xff6b9d  // Seasonal
+        ];
+
+        const geometry = new THREE.BoxGeometry(2, 1.2, 1.5);
+        geometry.computeVertexNormals();
+        
+        const material = new THREE.MeshPhongMaterial({
+            color: soapColors[0],
+            shininess: 40,
+            specular: 0x555555,
+        });
+
+        const soap = new THREE.Mesh(geometry, material);
+        soap.position.y = 0.3;
+        scene.add(soap);
+
+        // Bubbles
+        const bubbleGeometry = new THREE.SphereGeometry(0.12, 16, 16);
+        const bubbleMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.3,
+            shininess: 100,
+        });
+
+        const bubbles = [];
+        for (let i = 0; i < 15; i++) {
+            const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+            bubble.position.x = (Math.random() - 0.5) * 6;
+            bubble.position.y = (Math.random() - 0.5) * 4;
+            bubble.position.z = (Math.random() - 0.5) * 3;
+            scene.add(bubble);
+            bubbles.push({
+                mesh: bubble,
+                speed: Math.random() * 0.02 + 0.01
+            });
+        }
+
+        // Color morphing
+        let colorIndex = 0;
+        let colorTransition = 0;
+        const colorSpeed = 0.002;
+
+        function lerpColor(color1, color2, t) {
+            const r1 = (color1 >> 16) & 0xff;
+            const g1 = (color1 >> 8) & 0xff;
+            const b1 = color1 & 0xff;
+            
+            const r2 = (color2 >> 16) & 0xff;
+            const g2 = (color2 >> 8) & 0xff;
+            const b2 = color2 & 0xff;
+            
+            const r = Math.round(r1 + (r2 - r1) * t);
+            const g = Math.round(g1 + (g2 - g1) * t);
+            const b = Math.round(b1 + (b2 - b1) * t);
+            
+            return (r << 16) | (g << 8) | b;
+        }
+
+        // Mouse interaction
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 2 - 1;
+            const y = -(e.clientY / window.innerHeight) * 2 + 1;
+            
+            targetRotationY = x * 0.3;
+            targetRotationX = y * 0.3;
+        });
+
+        // Scroll animation
+        let scrollY = 0;
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Color morphing
+            colorTransition += colorSpeed;
+            if (colorTransition >= 1) {
+                colorTransition = 0;
+                colorIndex = (colorIndex + 1) % soapColors.length;
+            }
+            
+            const nextColorIndex = (colorIndex + 1) % soapColors.length;
+            const newColor = lerpColor(soapColors[colorIndex], soapColors[nextColorIndex], colorTransition);
+            material.color.setHex(newColor);
+            
+            // Soap rotation
+            soap.rotation.x += (targetRotationX - soap.rotation.x) * 0.05;
+            soap.rotation.y += 0.005;
+            soap.rotation.y += (targetRotationY - soap.rotation.y) * 0.05;
+            
+            // Scroll effect
+            const scrollPercent = Math.min(scrollY / window.innerHeight, 1);
+            soap.position.z = -scrollPercent * 8;
+            soap.scale.set(1 - scrollPercent * 0.5, 1 - scrollPercent * 0.5, 1 - scrollPercent * 0.5);
+            
+            // Bubbles floating
+            bubbles.forEach(bubble => {
+                bubble.mesh.position.y += bubble.speed;
+                bubble.mesh.rotation.x += 0.01;
+                bubble.mesh.rotation.y += 0.01;
+                
+                if (bubble.mesh.position.y > 3) {
+                    bubble.mesh.position.y = -3;
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Scroll reveal animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .product-card, .section-title').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
