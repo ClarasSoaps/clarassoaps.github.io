@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clara's Soap - 3D Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Georgia', serif;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3.5rem;
+            color: #4a4a4a;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 2.5rem;
+            color: #4a4a4a;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            background: #b19cd9;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #9d84c7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(177, 156, 217, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <section class="section">
+            <div class="card">
+                <h1>Clara's Soap</h1>
+                <p style="font-size: 1.5rem; color: #b19cd9;">Handcrafted with Love</p>
+                <p>Scroll down to experience our 3D soap showcase ↓</p>
+            </div>
+        </section>
+
+        <section class="section" style="background: linear-gradient(to bottom, transparent, rgba(177, 156, 217, 0.1));">
+            <div class="card">
+                <h2>Luxurious Soaps</h2>
+                <p>Each bar is carefully handcrafted with natural ingredients and essential oils</p>
+                <p style="color: #999; margin-top: 1rem;">Watch the soap bars float and rotate as you scroll</p>
+            </div>
+        </section>
+
+        <section class="section" style="background: linear-gradient(to bottom, rgba(177, 156, 217, 0.1), rgba(152, 216, 200, 0.1));">
+            <div class="card">
+                <h2>All Natural</h2>
+                <p>Made with love using only the finest botanical ingredients</p>
+                <a href="shop.html" class="btn">Shop Now</a>
+            </div>
+        </section>
+
+        <section class="section" style="background: rgba(152, 216, 200, 0.1);">
+            <div class="card">
+                <h2>Seasonal Favorites</h2>
+                <p>Limited-time scents crafted for the season</p>
+                <a href="index.html" class="btn">Back to Home</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const container = document.getElementById('canvas-container');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf5f0e8);
+
+        // Camera
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.z = 5;
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0xffd9b3, 0.5);
+        pointLight.position.set(-5, 3, 2);
+        scene.add(pointLight);
+
+        // Soap colors matching your products
+        const soapColors = [
+            0xb19cd9, // Lavender
+            0x8b6f47, // Cedarwood
+            0xffd700, // Lemongrass
+            0x98d8c8, // Cucumber
+            0xff6b9d, // Seasonal
+        ];
+
+        const soapBars = [];
+        
+        // Create soap bars
+        soapColors.forEach((color, i) => {
+            const geometry = new THREE.BoxGeometry(1.2, 0.6, 0.8);
+            
+            // Round the edges slightly
+            geometry.computeVertexNormals();
+            
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                shininess: 30,
+                specular: 0x444444,
+            });
+            
+            const soap = new THREE.Mesh(geometry, material);
+            
+            // Position soaps in a circular pattern
+            const angle = (i / soapColors.length) * Math.PI * 2;
+            soap.position.x = Math.cos(angle) * 3;
+            soap.position.y = Math.sin(angle) * 2;
+            soap.position.z = -2 + (i * 0.5);
+            
+            soap.rotation.x = Math.random() * 0.5;
+            soap.rotation.y = Math.random() * 0.5;
+            
+            scene.add(soap);
+            soapBars.push({ mesh: soap, type: 'soap', index: i });
+        });
+
+        // Add decorative bubbles
+        const bubbleGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+        const bubbleMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.4,
+            shininess: 100,
+        });
+
+        for (let i = 0; i < 20; i++) {
+            const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+            bubble.position.x = (Math.random() - 0.5) * 10;
+            bubble.position.y = (Math.random() - 0.5) * 8;
+            bubble.position.z = (Math.random() - 0.5) * 5;
+            scene.add(bubble);
+            soapBars.push({ mesh: bubble, type: 'bubble', index: i });
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            soapBars.forEach((obj) => {
+                obj.mesh.rotation.x += 0.005 * (obj.index % 2 === 0 ? 1 : -1);
+                obj.mesh.rotation.y += 0.005;
+            });
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Scroll animation
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            
+            soapBars.forEach((obj) => {
+                if (obj.type === 'soap') {
+                    obj.mesh.rotation.x = scrollPercent * Math.PI * 2 + obj.index;
+                    obj.mesh.rotation.y = scrollPercent * Math.PI * 3;
+                    obj.mesh.position.y = Math.sin(scrollPercent * Math.PI * 4 + obj.index) * 2;
+                } else {
+                    obj.mesh.position.y += scrollPercent * 0.05;
+                }
+            });
+
+            camera.position.y = scrollPercent * -2;
+            camera.rotation.z = scrollPercent * 0.2;
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
