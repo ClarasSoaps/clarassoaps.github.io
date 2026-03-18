@@ -1,58 +1,87 @@
-// ============================================================
-//  Clara's Soap — Checkout
-//  Multi-step: Contact → Delivery → Payment
+// ================================================================
+//  Clara's Soap — Checkout Controller
+//  Multi-step: 1. Contact  →  2. Delivery  →  3. Payment
 //
-//  SETUP CHECKLIST (replace these placeholders before going live):
-//  1. PayPal:   In checkout.html, replace YOUR_PAYPAL_CLIENT_ID
-//               → developer.paypal.com → My Apps & Credentials
-//  2. Venmo:    Change VENMO_USERNAME below to Clara's Venmo @username
-//  3. Zelle:    Change ZELLE_CONTACT below to Clara's email or phone
-//  4. EmailJS:  Sign up at emailjs.com, then fill in the 3 values below
-// ============================================================
+//  ── SETUP: Fill in these 7 values before going live ──────────
+//
+//  checkout.html line ~11:
+//    Replace YOUR_PAYPAL_CLIENT_ID with your real PayPal Client ID
+//    from: developer.paypal.com → My Apps & Credentials
+//
+//  Below this comment block:
+//    VENMO_USERNAME      Your Venmo @username (without the @)
+//    ZELLE_CONTACT       Your email or phone registered with Zelle
+//    CLARA_EMAIL         The Gmail address you want order alerts sent to
+//    EMAILJS_PUBLIC_KEY  From emailjs.com → Account → Public Key
+//    EMAILJS_SERVICE_ID  From emailjs.com → Email Services (Gmail service)
+//    EMAILJS_CUSTOMER_TEMPLATE_ID  Template 1 (customer confirmation)
+//    EMAILJS_CLARA_TEMPLATE_ID     Template 2 (Clara's order alert)
+// ================================================================
 
-// ── ① Credentials to fill in ──────────────────────────────
-const VENMO_USERNAME  = 'YOUR_VENMO_USERNAME';   // e.g. 'ClarasSoap'
-const ZELLE_CONTACT   = 'YOUR_EMAIL_OR_PHONE';   // e.g. 'hello@clarassoap.com'
+const VENMO_USERNAME  = 'YOUR_VENMO_USERNAME';
+const ZELLE_CONTACT   = 'YOUR_EMAIL_OR_PHONE';
+const CLARA_EMAIL     = 'YOUR_GMAIL_ADDRESS';   // Where order alerts go
 
-const EMAILJS_PUBLIC_KEY   = 'YOUR_EMAILJS_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID   = 'YOUR_EMAILJS_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID  = 'YOUR_EMAILJS_TEMPLATE_ID';
-// ──────────────────────────────────────────────────────────
+const EMAILJS_PUBLIC_KEY          = 'YOUR_EMAILJS_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID          = 'YOUR_EMAILJS_SERVICE_ID';
+const EMAILJS_CUSTOMER_TEMPLATE_ID = 'YOUR_CUSTOMER_TEMPLATE_ID';
+const EMAILJS_CLARA_TEMPLATE_ID    = 'YOUR_CLARA_TEMPLATE_ID';
 
-// State
-let currentStep = 1;
-let shippingCost = 6.00;
-let addGiftWrap = false;
+// ── State ─────────────────────────────────────────────────────
+let currentStep    = 1;
+let shippingCost   = 6.00;
+let addGiftWrap    = false;
+let paypalRendered = false;
+let sessionOrderId = null;   // Unique ID for this checkout session
 
-// ── Init ──────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Redirect to shop if cart is empty
     const items = cart.getItems();
     if (!items || items.length === 0) {
         window.location.href = 'shop.html';
         return;
     }
 
-    // Update nav cart badge
-    const navBadge = document.getElementById('navCartCount');
-    if (navBadge) navBadge.textContent = cart.calculateTotals().itemCount || 0;
+    // Generate (or restore) a unique session order ID and put it in the URL
+    sessionOrderId = getOrCreateSessionId();
 
-    // EmailJS init (safe to call even with placeholder key)
+    // EmailJS init
     try { emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e) {}
 
-    // Set initial shipping price label
+    // Nav badge
+    const badge = document.getElementById('navCartCount');
+    if (badge) badge.textContent = cart.calculateTotals().itemCount || 0;
+
+    // Venmo/Zelle handles
+    setText('venmo-handle', '@' + VENMO_USERNAME);
+    setText('zelle-contact', ZELLE_CONTACT);
+
     updateStandardShippingLabel();
     renderSummary();
     renderPaymentReview();
-
-    // Set Venmo / Zelle handles
-    const venmoEl = document.getElementById('venmo-handle');
-    const zelleEl = document.getElementById('zelle-contact');
-    if (venmoEl) venmoEl.textContent = '@' + VENMO_USERNAME;
-    if (zelleEl) zelleEl.textContent = ZELLE_CONTACT;
 });
 
-// ── Step Navigation ───────────────────────────────────────
+// ── Unique Session URL ─────────────────────────────────────────
+// Each checkout visit gets its own URL:  checkout.html?order=CS-XXXXXX
+// This makes every session traceable and feels personalised.
+function getOrCreateSessionId() {
+    // Check if URL already has one (e.g. browser back)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('order')) return params.get('order');
+
+    // Generate a new one: CS- + 6 random alphanumeric characters
+    const chars  = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let id = 'CS-';
+    for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
+
+    // Push into the URL bar without reloading the page
+    const newUrl = window.location.pathname + '?order=' + id;
+    window.history.replaceState({ orderId: id }, '', newUrl);
+
+    return id;
+}
+
+// ── Step Navigation ────────────────────────────────────────────
 function goToStep(n) {
     if (n > currentStep && !validateStep(currentStep)) return;
 
@@ -63,7 +92,6 @@ function goToStep(n) {
     updateStepIndicators();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Render PayPal buttons when step 3 is first reached
     if (n === 3) {
         renderPaymentReview();
         renderPayPalButton();
@@ -73,58 +101,47 @@ function goToStep(n) {
 
 function updateStepIndicators() {
     for (let i = 1; i <= 3; i++) {
-        const ind = document.getElementById('step-ind-' + i);
+        const ind    = document.getElementById('step-ind-' + i);
         const bubble = ind ? ind.querySelector('.step-bubble') : null;
         if (!ind) continue;
 
         ind.classList.remove('active', 'done');
-        if (i < currentStep) {
-            ind.classList.add('done');
-            if (bubble) bubble.textContent = '✓';
-        } else if (i === currentStep) {
-            ind.classList.add('active');
-            if (bubble) bubble.textContent = i;
-        } else {
-            if (bubble) bubble.textContent = i;
-        }
+        if (i < currentStep)       { ind.classList.add('done');   if (bubble) bubble.textContent = '✓'; }
+        else if (i === currentStep) { ind.classList.add('active'); if (bubble) bubble.textContent = i;  }
+        else                        {                               if (bubble) bubble.textContent = i;  }
     }
-    // Connectors
     for (let i = 1; i <= 2; i++) {
         const conn = document.getElementById('step-conn-' + i);
         if (conn) conn.classList.toggle('done', i < currentStep);
     }
 }
 
-// ── Validation ────────────────────────────────────────────
+// ── Validation ─────────────────────────────────────────────────
 function validateStep(step) {
     let ok = true;
-
     if (step === 1) {
-        ok = requireField('firstName', 'Required') && ok;
-        ok = requireField('lastName', 'Required') && ok;
-        ok = requireEmail('email') && ok;
-        ok = requireField('phone', 'Required') && ok;
+        ok = requireField('firstName', 'Required')   && ok;
+        ok = requireField('lastName',  'Required')   && ok;
+        ok = requireEmail('email')                   && ok;
+        ok = requireField('phone',     'Required')   && ok;
     }
-
     if (step === 2) {
-        const method = getShippingMethod();
-        if (method === 'standard' || method === 'express') {
-            ok = requireField('address', 'Required') && ok;
-            ok = requireField('city', 'Required') && ok;
-            ok = requireField('state', 'Enter 2-letter state code') && ok;
-            ok = requireField('zip', 'Required') && ok;
+        const m = getShippingMethod();
+        if (m === 'standard' || m === 'express') {
+            ok = requireField('address', 'Required')              && ok;
+            ok = requireField('city',    'Required')              && ok;
+            ok = requireField('state',   '2-letter state code')   && ok;
+            ok = requireField('zip',     'Required')              && ok;
         }
     }
-
     return ok;
 }
 
 function requireField(id, msg) {
-    const el = document.getElementById(id);
+    const el  = document.getElementById(id);
     const err = document.getElementById('err-' + id);
     if (!el) return true;
-    const val = el.value.trim();
-    if (!val) {
+    if (!el.value.trim()) {
         el.classList.add('input-error');
         if (err) err.textContent = msg;
         el.addEventListener('input', () => clearError(id), { once: true });
@@ -135,12 +152,10 @@ function requireField(id, msg) {
 }
 
 function requireEmail(id) {
-    const el = document.getElementById(id);
+    const el  = document.getElementById(id);
     const err = document.getElementById('err-' + id);
     if (!el) return true;
-    const val = el.value.trim();
-    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    if (!valid) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())) {
         el.classList.add('input-error');
         if (err) err.textContent = 'Enter a valid email address';
         el.addEventListener('input', () => clearError(id), { once: true });
@@ -151,46 +166,43 @@ function requireEmail(id) {
 }
 
 function clearError(id) {
-    const el = document.getElementById(id);
+    const el  = document.getElementById(id);
     const err = document.getElementById('err-' + id);
-    if (el) el.classList.remove('input-error');
+    if (el)  el.classList.remove('input-error');
     if (err) err.textContent = '';
 }
 
-// ── Shipping Logic ────────────────────────────────────────
+// ── Shipping ───────────────────────────────────────────────────
 function getShippingMethod() {
-    const checked = document.querySelector('input[name="shipping"]:checked');
-    return checked ? checked.value : 'standard';
+    const el = document.querySelector('input[name="shipping"]:checked');
+    return el ? el.value : 'standard';
+}
+
+function getShippingLabel() {
+    return { standard: 'Standard Shipping', express: 'Express Shipping', pickup: 'Farm Pickup', church: 'Church Delivery' }[getShippingMethod()] || 'Shipping';
 }
 
 function onShippingChange() {
-    const method = getShippingMethod();
-    const addressPanel = document.getElementById('addressFields');
-
-    if (method === 'standard' || method === 'express') {
-        if (addressPanel) addressPanel.style.display = 'block';
-        shippingCost = method === 'express' ? 12.00 : getStandardShippingCost();
+    const m = getShippingMethod();
+    const addr = document.getElementById('addressFields');
+    if (m === 'standard' || m === 'express') {
+        if (addr) addr.style.display = 'block';
+        shippingCost = m === 'express' ? 12.00 : getStandardShippingCost();
     } else {
-        if (addressPanel) addressPanel.style.display = 'none';
+        if (addr) addr.style.display = 'none';
         shippingCost = 0;
     }
-
     renderSummary();
 }
 
 function getStandardShippingCost() {
-    const totals = cart.calculateTotals();
-    return 5.00 + (totals.itemCount * 1.00);
+    return 5.00 + (cart.calculateTotals().itemCount * 1.00);
 }
 
 function updateStandardShippingLabel() {
-    const label = document.getElementById('standardPriceLabel');
     const cost = getStandardShippingCost();
-    if (label) label.textContent = '$' + cost.toFixed(2);
-    // Update shippingCost if standard is currently selected
-    if (getShippingMethod() === 'standard') {
-        shippingCost = cost;
-    }
+    setText('standardPriceLabel', '$' + cost.toFixed(2));
+    if (getShippingMethod() === 'standard') shippingCost = cost;
 }
 
 function onGiftChange() {
@@ -198,238 +210,244 @@ function onGiftChange() {
     renderSummary();
 }
 
-// ── Summary Rendering ─────────────────────────────────────
-function renderSummary() {
-    const items = cart.getItems();
-    const totals = cart.calculateTotals();
+// ── Summary Rendering ──────────────────────────────────────────
+function getOrderTotal() {
+    const totals  = cart.calculateTotals();
     const giftCost = addGiftWrap ? 3.00 : 0;
-    const finalTotal = totals.total + shippingCost + giftCost;
+    return totals.total + shippingCost + giftCost;
+}
 
-    // Items list
+function renderSummary() {
+    const items   = cart.getItems();
+    const totals  = cart.calculateTotals();
+    const giftCost = addGiftWrap ? 3.00 : 0;
+    const final   = getOrderTotal();
+
     const itemsEl = document.getElementById('summaryItems');
     if (itemsEl) {
-        if (items.length === 0) {
-            itemsEl.innerHTML = '<p class="summary-empty">Your cart is empty.</p>';
-        } else {
-            itemsEl.innerHTML = items.map(item => `
+        itemsEl.innerHTML = items.length === 0
+            ? '<p class="summary-empty">Your cart is empty.</p>'
+            : items.map(i => `
                 <div class="summary-item">
-                    <span class="summary-item-name">${item.name} × ${item.quantity}</span>
-                    <span class="summary-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-            `).join('');
-        }
+                    <span class="summary-item-name">${i.name} × ${i.quantity}</span>
+                    <span class="summary-item-price">$${(i.price * i.quantity).toFixed(2)}</span>
+                </div>`).join('');
     }
 
-    // Totals
     setText('sumSubtotal', '$' + totals.subtotal.toFixed(2));
 
-    const discountLine = document.getElementById('sumDiscountLine');
-    if (discountLine) {
-        if (totals.discount > 0) {
-            discountLine.style.display = 'flex';
-            setText('sumDiscount', '−$' + totals.discount.toFixed(2));
-        } else {
-            discountLine.style.display = 'none';
-        }
+    const dLine = document.getElementById('sumDiscountLine');
+    if (dLine) {
+        dLine.style.display = totals.discount > 0 ? 'flex' : 'none';
+        setText('sumDiscount', '−$' + totals.discount.toFixed(2));
     }
 
     setText('sumShipping', shippingCost > 0 ? '$' + shippingCost.toFixed(2) : 'Free');
 
-    const giftLine = document.getElementById('sumGiftLine');
-    if (giftLine) giftLine.style.display = addGiftWrap ? 'flex' : 'none';
+    const gLine = document.getElementById('sumGiftLine');
+    if (gLine) gLine.style.display = addGiftWrap ? 'flex' : 'none';
 
-    setText('sumTotal', '$' + finalTotal.toFixed(2));
+    setText('sumTotal', '$' + final.toFixed(2));
 }
 
 function renderPaymentReview() {
     const el = document.getElementById('paymentReview');
     if (!el) return;
-
-    const customer = getCustomerData();
-    const method = getShippingMethod();
-    const methodLabel = { standard: 'Standard Shipping', express: 'Express Shipping', pickup: 'Farm Pickup', church: 'Church Delivery' }[method] || method;
-    const totals = cart.calculateTotals();
-    const giftCost = addGiftWrap ? 3.00 : 0;
-    const finalTotal = totals.total + shippingCost + giftCost;
-
+    const c      = getCustomerData();
+    const final  = getOrderTotal();
     el.innerHTML = `
-        <div class="review-row"><span>Customer</span><span>${customer.firstName} ${customer.lastName}</span></div>
-        <div class="review-row"><span>Email</span><span>${customer.email}</span></div>
-        <div class="review-row"><span>Delivery</span><span>${methodLabel}</span></div>
-        <div class="review-row review-row-total"><span>Order Total</span><span>$${finalTotal.toFixed(2)}</span></div>
-    `;
+        <div class="review-row"><span>Customer</span><span>${c.firstName} ${c.lastName}</span></div>
+        <div class="review-row"><span>Email</span><span>${c.email}</span></div>
+        <div class="review-row"><span>Delivery</span><span>${getShippingLabel()}</span></div>
+        <div class="review-row review-row-total"><span>Total</span><span>$${final.toFixed(2)}</span></div>`;
 }
 
-// ── PayPal Integration ────────────────────────────────────
-let paypalRendered = false;
-
+// ── PayPal ─────────────────────────────────────────────────────
 function renderPayPalButton() {
     if (paypalRendered) return;
+    const container = document.getElementById('paypal-button-container');
+    if (!container) return;
+
     if (typeof paypal === 'undefined') {
-        document.getElementById('paypal-button-container').innerHTML =
-            '<p class="payment-note" style="color:var(--primary-pink);">⚠️ PayPal is not configured yet. Add your Client ID to checkout.html to enable card payments.</p>';
+        container.innerHTML = '<p class="payment-note" style="color:var(--primary-pink); text-align:center; padding:1rem;">⚠️ PayPal not yet configured. Add your Client ID to checkout.html to enable card &amp; PayPal payments.</p>';
         return;
     }
     paypalRendered = true;
 
     paypal.Buttons({
-        style: {
-            layout: 'vertical',
-            color: 'gold',
-            shape: 'rect',
-            label: 'pay',
-            height: 48
-        },
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay', height: 50 },
 
-        // Called when PayPal opens — passes the order total
-        createOrder: function(data, actions) {
-            const totals = cart.calculateTotals();
+        createOrder: (data, actions) => {
+            const totals  = cart.calculateTotals();
             const giftCost = addGiftWrap ? 3.00 : 0;
-            const finalTotal = (totals.total + shippingCost + giftCost).toFixed(2);
-            const items = cart.getItems();
+            const total   = (totals.total + shippingCost + giftCost).toFixed(2);
 
             return actions.order.create({
                 purchase_units: [{
-                    description: "Clara's Soap Order",
+                    description: "Clara's Soap — Order " + sessionOrderId,
+                    custom_id:   sessionOrderId,
                     amount: {
                         currency_code: 'USD',
-                        value: finalTotal,
+                        value: total,
                         breakdown: {
-                            item_total: { currency_code: 'USD', value: totals.subtotal.toFixed(2) },
-                            discount: { currency_code: 'USD', value: totals.discount.toFixed(2) },
-                            shipping: { currency_code: 'USD', value: shippingCost.toFixed(2) },
-                            handling: { currency_code: 'USD', value: giftCost.toFixed(2) }
+                            item_total:  { currency_code: 'USD', value: totals.subtotal.toFixed(2) },
+                            discount:    { currency_code: 'USD', value: totals.discount.toFixed(2) },
+                            shipping:    { currency_code: 'USD', value: shippingCost.toFixed(2) },
+                            handling:    { currency_code: 'USD', value: giftCost.toFixed(2) }
                         }
                     },
-                    items: items.map(item => ({
-                        name: item.name,
-                        unit_amount: { currency_code: 'USD', value: item.price.toFixed(2) },
-                        quantity: String(item.quantity),
-                        category: 'PHYSICAL_GOODS'
+                    items: cart.getItems().map(i => ({
+                        name:        i.name,
+                        unit_amount: { currency_code: 'USD', value: i.price.toFixed(2) },
+                        quantity:    String(i.quantity),
+                        category:    'PHYSICAL_GOODS'
                     }))
                 }]
             });
         },
 
-        // Called when the customer approves payment
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(orderDetails) {
-                const payerName = orderDetails.payer.name.given_name;
-                sendOrderEmail('PayPal', orderDetails.id);
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(details => {
+                const name = details.payer.name.given_name;
+                sendBothEmails('PayPal', details.id);
                 cart.clearCart();
-                showSuccessScreen(payerName, 'PayPal', orderDetails.id);
+                showSuccessScreen(name, 'PayPal', details.id);
             });
         },
 
-        onError: function(err) {
-            console.error('PayPal error:', err);
-            alert('There was an issue processing your payment. Please try again or use Venmo/Zelle.');
-        },
-
-        onCancel: function() {
-            // No action needed — user simply closed the PayPal window
-        }
-
+        onError:  err  => { console.error(err); alert('Payment error — please try again or use Venmo/Zelle.'); },
+        onCancel: ()   => {}
     }).render('#paypal-button-container');
 }
 
-// ── Manual Payment (Venmo / Zelle) ───────────────────────
+// ── Manual Payments (Venmo / Zelle) ────────────────────────────
 function switchPayTab(tab) {
     ['paypal', 'venmo', 'zelle'].forEach(t => {
         document.getElementById('tab-' + t).classList.toggle('active', t === tab);
         const panel = document.getElementById('panel-' + t);
         if (panel) panel.style.display = t === tab ? 'block' : 'none';
     });
-
-    if (tab === 'paypal') renderPayPalButton();
-    if (tab === 'venmo' || tab === 'zelle') updateVenmoZelleAmounts();
+    if (tab === 'paypal')                    renderPayPalButton();
+    if (tab === 'venmo' || tab === 'zelle')  updateVenmoZelleAmounts();
 }
 
 function updateVenmoZelleAmounts() {
-    const totals = cart.calculateTotals();
-    const giftCost = addGiftWrap ? 3.00 : 0;
-    const finalTotal = (totals.total + shippingCost + giftCost).toFixed(2);
+    const total  = getOrderTotal().toFixed(2);
+    const note   = encodeURIComponent("Clara's Soap: " + cart.getItems().map(i => `${i.name} x${i.quantity}`).join(', ') + ' | Order ' + sessionOrderId);
 
-    setText('venmo-amount', '$' + finalTotal);
-    setText('zelle-amount', '$' + finalTotal);
+    setText('venmo-amount', '$' + total);
+    setText('zelle-amount',  '$' + total);
 
-    // Build Venmo deep link
-    const noteItems = cart.getItems().map(i => `${i.name} x${i.quantity}`).join(', ');
-    const note = encodeURIComponent("Clara's Soap: " + noteItems);
-    const venmoLink = `venmo://paycharge?txn=pay&recipients=${encodeURIComponent(VENMO_USERNAME)}&amount=${finalTotal}&note=${note}`;
-    const venmoEl = document.getElementById('venmo-link');
-    if (venmoEl) venmoEl.href = venmoLink;
+    const vLink = document.getElementById('venmo-link');
+    if (vLink) vLink.href = `venmo://paycharge?txn=pay&recipients=${encodeURIComponent(VENMO_USERNAME)}&amount=${total}&note=${note}`;
 }
 
 function confirmManualPayment(method) {
-    const customer = getCustomerData();
-    if (!customer.firstName) {
-        alert('Please complete steps 1 and 2 first.');
-        goToStep(1);
-        return;
-    }
-    sendOrderEmail(method, 'MANUAL-' + Date.now());
+    const c = getCustomerData();
+    if (!c.firstName || !c.email) { goToStep(1); return; }
+    sendBothEmails(method, 'MANUAL-' + sessionOrderId);
     cart.clearCart();
-    showSuccessScreen(customer.firstName, method, null);
+    showSuccessScreen(c.firstName, method, null);
 }
 
-// ── Success Screen ────────────────────────────────────────
-function showSuccessScreen(firstName, paymentMethod, transactionId) {
+// ── Success Screen ─────────────────────────────────────────────
+function showSuccessScreen(firstName, payMethod, txnId) {
     document.getElementById('checkoutMain').style.display = 'none';
     const screen = document.getElementById('successScreen');
     screen.style.display = 'flex';
 
-    setText('successMessage',
-        `Thank you, ${firstName}! Your order has been received and Clara will be in touch soon.`);
+    setText('successMessage', `Thank you, ${firstName}! Your order #${sessionOrderId} has been received and Clara will be in touch soon. 🌸`);
 
     const details = document.getElementById('successDetails');
     if (details) {
-        const isManual = paymentMethod === 'Venmo' || paymentMethod === 'Zelle';
+        const isManual = payMethod === 'Venmo' || payMethod === 'Zelle';
         details.innerHTML = isManual
-            ? `<p>Payment method: <strong>${paymentMethod}</strong></p>
-               <p>Once Clara confirms your payment, she'll get your order ready! 🌸</p>`
-            : `<p>Payment confirmed via <strong>${paymentMethod}</strong>.</p>
-               ${transactionId ? `<p style="font-size:0.8rem;color:var(--gray);">Transaction ID: ${transactionId}</p>` : ''}`;
+            ? `<p>Payment method: <strong>${payMethod}</strong></p>
+               <p>Once Clara confirms your payment, she'll get your order packed up!</p>`
+            : `<p>Payment confirmed via <strong>${payMethod}</strong>.</p>
+               ${txnId ? `<p style="font-size:0.78rem;color:var(--gray);">Transaction: ${txnId}</p>` : ''}
+               <p>Check your email for a confirmation from Clara's Soap.</p>`;
     }
+
+    // Clean up the URL — remove the session param so it's tidy
+    window.history.replaceState({}, '', window.location.pathname + '?confirmed=' + sessionOrderId);
 }
 
-// ── EmailJS Notification ──────────────────────────────────
-function sendOrderEmail(paymentMethod, transactionId) {
-    if (EMAILJS_SERVICE_ID === 'YOUR_EMAILJS_SERVICE_ID') return; // Not configured yet
+// ── Dual Email Send ────────────────────────────────────────────
+function sendBothEmails(paymentMethod, transactionId) {
+    if (EMAILJS_SERVICE_ID === 'YOUR_EMAILJS_SERVICE_ID') {
+        console.warn('EmailJS not configured — skipping email sends.');
+        return;
+    }
 
-    const customer = getCustomerData();
-    const items = cart.getItems();
-    const totals = cart.calculateTotals();
+    const c       = getCustomerData();
+    const items   = cart.getItems();
+    const totals  = cart.calculateTotals();
     const giftCost = addGiftWrap ? 3.00 : 0;
-    const finalTotal = (totals.total + shippingCost + giftCost).toFixed(2);
-    const method = getShippingMethod();
-    const address = getAddressData();
+    const final   = (totals.total + shippingCost + giftCost).toFixed(2);
+    const address = getAddressData() || 'N/A (Pickup / Church)';
+    const label   = getShippingLabel();
 
-    const itemsList = items.map(i => `${i.name} x${i.quantity} — $${(i.price * i.quantity).toFixed(2)}`).join('\n');
+    // Build items HTML rows (renders inside both email templates)
+    const itemsHtml = items.map(i => `
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #F0E8E0;">
+            <tr style="vertical-align:top;">
+                <td style="padding:14px 8px 14px 0; width:100%;">
+                    <div style="font-weight:600; color:#333;">${i.name}</div>
+                    <div style="font-size:12px; color:#888; margin-top:3px;">Qty: ${i.quantity} &nbsp;×&nbsp; $${i.price.toFixed(2)} each</div>
+                </td>
+                <td style="padding:14px 0 14px 8px; white-space:nowrap; font-weight:700; color:#6B5638; vertical-align:top;">
+                    $${(i.price * i.quantity).toFixed(2)}
+                </td>
+            </tr>
+        </table>`).join('');
 
-    const templateParams = {
-        customer_name:   `${customer.firstName} ${customer.lastName}`,
-        customer_email:  customer.email,
-        customer_phone:  customer.phone,
-        payment_method:  paymentMethod,
-        transaction_id:  transactionId || 'N/A',
-        items_list:      itemsList,
-        subtotal:        '$' + totals.subtotal.toFixed(2),
-        discount:        totals.discount > 0 ? '−$' + totals.discount.toFixed(2) : '$0.00',
-        shipping_method: method,
-        shipping_cost:   shippingCost > 0 ? '$' + shippingCost.toFixed(2) : 'Free',
-        gift_wrap:       addGiftWrap ? 'Yes (+$3.00)' : 'No',
-        order_total:     '$' + finalTotal,
-        ship_address:    address || 'N/A (Pickup/Church)',
-        to_email:        customer.email
+    // Optional discount row
+    const discountLine = totals.discount > 0
+        ? `<tr><td style="color:#888; padding:4px 0;">Bundle Discount 🎉</td><td style="text-align:right; color:#C9A961; padding:4px 0;">−$${totals.discount.toFixed(2)}</td></tr>`
+        : '';
+
+    // Optional gift wrap row
+    const giftWrapLine = addGiftWrap
+        ? `<tr><td style="color:#888; padding:4px 0;">Gift Wrapping 🎁</td><td style="text-align:right; color:#333; padding:4px 0;">$3.00</td></tr>`
+        : '';
+
+    const sharedParams = {
+        order_id:         sessionOrderId,
+        items_html:       itemsHtml,
+        subtotal:         '$' + totals.subtotal.toFixed(2),
+        discount_line:    discountLine,
+        shipping_label:   label,
+        shipping_cost:    shippingCost > 0 ? '$' + shippingCost.toFixed(2) : 'Free',
+        gift_wrap_line:   giftWrapLine,
+        order_total:      '$' + final,
+        ship_address:     address,
+        payment_method:   paymentMethod,
+        transaction_id:   transactionId || 'N/A'
     };
 
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-        .then(() => console.log('Order email sent.'))
-        .catch(err => console.warn('EmailJS error:', err));
+    // ── Template 1: Customer confirmation ──────────────────
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CUSTOMER_TEMPLATE_ID, {
+        ...sharedParams,
+        customer_name: c.firstName + ' ' + c.lastName,
+        to_email:      c.email
+    })
+    .then(() => console.log('✅ Customer email sent to', c.email))
+    .catch(err => console.warn('Customer email error:', err));
+
+    // ── Template 2: Clara's order notification ─────────────
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CLARA_TEMPLATE_ID, {
+        ...sharedParams,
+        customer_name:  c.firstName + ' ' + c.lastName,
+        customer_email: c.email,
+        customer_phone: c.phone,
+        to_email:       CLARA_EMAIL
+    })
+    .then(() => console.log('✅ Order alert sent to Clara at', CLARA_EMAIL))
+    .catch(err => console.warn('Clara email error:', err));
 }
 
-// ── Helpers ───────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────
 function getCustomerData() {
     return {
         firstName: val('firstName'),
@@ -440,10 +458,9 @@ function getCustomerData() {
 }
 
 function getAddressData() {
-    const method = getShippingMethod();
-    if (method !== 'standard' && method !== 'express') return null;
-    const parts = [val('address'), val('address2'), val('city'), val('state'), val('zip')].filter(Boolean);
-    return parts.join(', ');
+    const m = getShippingMethod();
+    if (m !== 'standard' && m !== 'express') return null;
+    return [val('address'), val('address2'), val('city'), val('state'), val('zip')].filter(Boolean).join(', ');
 }
 
 function val(id) {
@@ -460,10 +477,11 @@ function copyText(id) {
     const el = document.getElementById(id);
     if (!el) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
-        const original = el.nextElementSibling;
-        if (original && original.classList.contains('copy-btn')) {
-            original.textContent = 'Copied!';
-            setTimeout(() => original.textContent = 'Copy', 1800);
+        const btn = el.nextElementSibling;
+        if (btn && btn.classList.contains('copy-btn')) {
+            const orig = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = orig, 1800);
         }
     });
 }

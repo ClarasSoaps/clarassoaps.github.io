@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  EMAILJS TEMPLATE 1 — CUSTOMER ORDER CONFIRMATION           ║
+  ║                                                              ║
+  ║  HOW TO SET THIS UP:                                         ║
+  ║  1. Go to emailjs.com → Email Templates → Create New        ║
+  ║  2. Click "Code Editor" (top right of the template editor)  ║
+  ║  3. Delete everything and paste the HTML below this header  ║
+  ║  4. Set Subject to:  Order #{{order_id}} Confirmed 🌸       ║
+  ║  5. Set "To Email" to:  {{to_email}}                        ║
+  ║  6. Set "From Name" to:  Clara's Soap                       ║
+  ║  7. Save and note this template's ID                         ║
+  ║                                                              ║
+  ║  VARIABLES THIS TEMPLATE USES:                              ║
+  ║  {{order_id}}         {{customer_name}}   {{to_email}}      ║
+  ║  {{payment_method}}   {{items_html}}      {{subtotal}}      ║
+  ║  {{discount_line}}    {{shipping_label}}  {{shipping_cost}} ║
+  ║  {{gift_wrap_line}}   {{order_total}}     {{ship_address}}  ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Clara's Soap</title>
+</head>
+<body style="margin:0; padding:0; background-color:#FAF7F2; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:14px; color:#333;">
+
+  <!-- Outer wrapper -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF7F2; padding:32px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- Card -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+          <!-- Header bar -->
+          <tr>
+            <td style="background:linear-gradient(135deg, #C54174 0%, #8B4565 100%); padding:28px 32px; text-align:center;">
+              <p style="margin:0 0 8px 0; font-size:22px; font-weight:300; color:rgba(255,255,255,0.85); letter-spacing:0.08em; text-transform:uppercase;">Clara's Soap</p>
+              <p style="margin:0; font-size:28px; font-weight:600; color:#fff;">Order Confirmed 🌸</p>
+            </td>
+          </tr>
+
+          <!-- Gold accent line -->
+          <tr>
+            <td style="height:4px; background:linear-gradient(90deg, #C9A961, #E6D5A8, #C9A961);"></td>
+          </tr>
+
+          <!-- Greeting -->
+          <tr>
+            <td style="padding:32px 32px 0;">
+              <p style="margin:0 0 8px; font-size:18px; color:#6B5638; font-weight:600;">Hi {{customer_name}},</p>
+              <p style="margin:0; color:#666; line-height:1.7;">Thank you so much for your order! 🧼✨ Clara is already getting to work on your soaps. You'll hear from her when your order is on its way.</p>
+            </td>
+          </tr>
+
+          <!-- Order ID badge -->
+          <tr>
+            <td style="padding:20px 32px 0;">
+              <table cellpadding="0" cellspacing="0" style="background:#FAF7F2; border-radius:10px; padding:14px 20px; width:100%;">
+                <tr>
+                  <td style="color:#888; font-size:12px; text-transform:uppercase; letter-spacing:0.1em;">Order Number</td>
+                  <td style="text-align:right; color:#888; font-size:12px; text-transform:uppercase; letter-spacing:0.1em;">Payment</td>
+                </tr>
+                <tr>
+                  <td style="color:#C54174; font-weight:700; font-size:16px; padding-top:4px;">#{{order_id}}</td>
+                  <td style="text-align:right; color:#6B5638; font-weight:600; padding-top:4px;">{{payment_method}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Items heading -->
+          <tr>
+            <td style="padding:28px 32px 8px;">
+              <p style="margin:0; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#888; border-bottom:2px solid #F0E8E0; padding-bottom:10px;">Your Items</p>
+            </td>
+          </tr>
+
+          <!-- Items (injected by JS as HTML) -->
+          <tr>
+            <td style="padding:0 32px;">
+              {{items_html}}
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:4px 32px 0;">
+              <div style="height:2px; background:#F0E8E0;"></div>
+            </td>
+          </tr>
+
+          <!-- Totals -->
+          <tr>
+            <td style="padding:20px 32px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+                <tr>
+                  <td style="color:#888; padding:5px 0;">Subtotal</td>
+                  <td style="text-align:right; color:#333; padding:5px 0;">{{subtotal}}</td>
+                </tr>
+                {{discount_line}}
+                <tr>
+                  <td style="color:#888; padding:5px 0;">{{shipping_label}}</td>
+                  <td style="text-align:right; color:#333; padding:5px 0;">{{shipping_cost}}</td>
+                </tr>
+                {{gift_wrap_line}}
+                <tr>
+                  <td style="padding-top:12px; border-top:2px solid #333;"><strong style="color:#6B5638; font-size:15px;">Order Total</strong></td>
+                  <td style="text-align:right; padding-top:12px; border-top:2px solid #333;"><strong style="color:#C9A961; font-size:18px;">{{order_total}}</strong></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Delivery info -->
+          <tr>
+            <td style="padding:24px 32px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F2; border-radius:10px; padding:16px 20px;">
+                <tr>
+                  <td style="color:#888; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; padding-bottom:8px;">Delivery Details</td>
+                </tr>
+                <tr>
+                  <td style="color:#6B5638; font-weight:600;">{{shipping_label}}</td>
+                </tr>
+                <tr>
+                  <td style="color:#555; padding-top:4px; line-height:1.6;">{{ship_address}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Warm closing -->
+          <tr>
+            <td style="padding:28px 32px;">
+              <p style="margin:0 0 8px; color:#666; line-height:1.7;">Questions? Just reply to this email or reach out through <a href="https://clarassoaps.github.io/contact.html" style="color:#C54174; text-decoration:none;">clarassoaps.github.io</a>.</p>
+              <p style="margin:0; color:#666; line-height:1.7;">With love,<br><strong style="color:#6B5638;">Clara 🌸</strong></p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#FAF7F2; padding:20px 32px; border-top:1px solid #F0E8E0; text-align:center;">
+              <p style="margin:0 0 6px; font-size:13px; font-weight:600; color:#8B6F47;">Clara's Soap</p>
+              <p style="margin:0; font-size:12px; color:#aaa; line-height:1.6;">Handcrafted with love by a young entrepreneur 🧼<br>This email was sent to {{to_email}} because you placed an order.</p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- End card -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
