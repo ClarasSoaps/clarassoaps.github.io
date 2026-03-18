@@ -1998,3 +1998,603 @@ footer {
     h3 { font-size: 1.25rem; }
     h4 { font-size: 1.1rem; }
 }
+
+/* ========================================
+   Multi-Step Checkout — New Styles
+   ======================================== */
+
+.checkout-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.checkout-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* ── Step Progress Bar ── */
+.step-progress {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 0.5rem;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 70px;
+}
+
+.step-item span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+}
+
+.step-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.step-item.active .step-bubble {
+    background: var(--primary-pink);
+    color: var(--white);
+    border-color: var(--primary-pink);
+    box-shadow: 0 4px 14px rgba(197, 65, 116, 0.3);
+}
+
+.step-item.active span {
+    color: var(--primary-pink);
+    font-weight: 600;
+}
+
+.step-item.done .step-bubble {
+    background: var(--gold);
+    color: var(--white);
+    border-color: var(--gold);
+}
+
+.step-item.done span {
+    color: var(--gold);
+}
+
+.step-connector {
+    flex: 1;
+    height: 2px;
+    background: var(--border-color);
+    margin-bottom: 1.5rem;
+    transition: background 0.3s ease;
+}
+
+.step-connector.done {
+    background: var(--gold);
+}
+
+/* ── Checkout Panel ── */
+.checkout-panel {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.checkout-panel h2 {
+    font-size: 1.75rem;
+    color: var(--brown-dark);
+    margin-bottom: 0.4rem;
+}
+
+.step-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+}
+
+/* ── Shipping Options ── */
+.shipping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.shipping-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease;
+    background: var(--bg-primary);
+}
+
+.shipping-option:hover {
+    border-color: var(--primary-pink);
+}
+
+.shipping-option:has(input:checked) {
+    border-color: var(--primary-pink);
+    background: var(--accent-pink);
+}
+
+[data-theme="dark"] .shipping-option:has(input:checked) {
+    background: rgba(212, 165, 165, 0.12);
+}
+
+.shipping-option input[type="radio"],
+.shipping-option input[type="checkbox"] {
+    accent-color: var(--primary-pink);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.shipping-option-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.option-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.option-price {
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 0.95rem;
+}
+
+.option-price.free {
+    color: #4CAF50;
+}
+
+.option-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* ── Address Fields ── */
+.address-fields {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.address-heading {
+    font-size: 1.1rem;
+    color: var(--brown-dark);
+    margin-bottom: 1.25rem;
+}
+
+.form-row-3 {
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+/* ── Input Error States ── */
+.field-error {
+    font-size: 0.78rem;
+    color: #e05a5a;
+    margin-top: 0.3rem;
+    display: block;
+    min-height: 1em;
+}
+
+.input-error {
+    border-color: #e05a5a !important;
+    box-shadow: 0 0 0 3px rgba(224, 90, 90, 0.12) !important;
+}
+
+/* ── Form inputs (dark mode fix) ── */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* ── Step Actions (nav buttons) ── */
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ── Payment Tabs ── */
+.payment-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.5rem 0 1.25rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0;
+}
+
+.payment-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    border-radius: 0;
+}
+
+.payment-tab:hover {
+    color: var(--primary-pink);
+}
+
+.payment-tab.active {
+    color: var(--primary-pink);
+    border-bottom-color: var(--primary-pink);
+    font-weight: 600;
+}
+
+.payment-panel {
+    padding: 1.25rem 0;
+}
+
+/* ── Payment Notes ── */
+.payment-note {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+}
+
+.payment-disclaimer {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* ── Payment Review (mini summary on step 3) ── */
+.payment-review {
+    background: var(--bg-primary);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.review-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    color: var(--text-secondary);
+}
+
+.review-row span:last-child {
+    color: var(--text-primary);
+    font-weight: 500;
+    text-align: right;
+    max-width: 60%;
+}
+
+.review-row-total {
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.4rem;
+    padding-top: 0.6rem;
+    font-weight: 600;
+    color: var(--text-primary) !important;
+}
+
+.review-row-total span {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+}
+
+/* ── Manual Payment Cards (Venmo / Zelle) ── */
+.manual-pay-card {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.75rem;
+    text-align: center;
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+.manual-pay-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.handle-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.handle-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    font-family: var(--font-heading);
+}
+
+.copy-btn {
+    padding: 0.3rem 0.8rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    border-color: var(--primary-pink);
+    color: var(--primary-pink);
+}
+
+.manual-amount-row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.manual-amount-row strong {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: var(--font-heading);
+}
+
+.manual-note {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--accent-pink);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .manual-note {
+    background: rgba(212, 165, 165, 0.12);
+}
+
+/* ── Order Summary Sidebar ── */
+.checkout-summary {
+    position: sticky;
+    top: 100px;
+}
+
+.order-summary {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.order-summary h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+    color: var(--brown-dark);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item-name {
+    color: var(--text-secondary);
+    flex: 1;
+    margin-right: 0.75rem;
+}
+
+.summary-item-price {
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.summary-totals {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.summary-line span:last-child {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.discount-amount {
+    color: var(--gold) !important;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--border-color);
+    margin-top: 0.25rem;
+    font-family: var(--font-heading);
+}
+
+.summary-trust {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-trust span {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.summary-empty {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+}
+
+/* ── Success Screen ── */
+.success-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 4rem 2rem;
+}
+
+.success-card {
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+}
+
+.success-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.success-card h2 {
+    margin-bottom: 0.75rem;
+    color: var(--brown-dark);
+}
+
+.success-card p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.success-details {
+    background: var(--bg-primary);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-top: 1.25rem;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.success-details p {
+    margin-bottom: 0.4rem;
+    color: var(--text-secondary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .checkout-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-summary {
+        position: static;
+        order: -1;
+    }
+
+    .checkout-panel {
+        padding: 1.75rem;
+    }
+}
+
+@media (max-width: 580px) {
+    .step-progress {
+        gap: 0;
+    }
+
+    .step-item span {
+        font-size: 0.65rem;
+    }
+
+    .form-row-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-panel {
+        padding: 1.25rem;
+    }
+
+    .payment-tabs {
+        flex-wrap: wrap;
+    }
+}
