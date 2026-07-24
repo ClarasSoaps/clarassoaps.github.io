@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Dark mode is driven by [data-theme="dark"] on <html> (set by next-themes),
+   preserving the attribute + localStorage key used by the previous site. */
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@theme inline {
+  /* shadcn semantic tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Clara's palette exposed as Tailwind color utilities */
+  --color-primary-pink: var(--primary-pink);
+  --color-primary-pink-dark: var(--primary-pink-dark);
+  --color-accent-pink: var(--accent-pink);
+  --color-brown: var(--brown);
+  --color-brown-dark: var(--brown-dark);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-cream: var(--cream);
+
+  /* Fonts (wired to next/font variables in app/layout.tsx) */
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-accent: var(--font-accent);
+
+  /* Radius scale (from the old site's --radius-sm/md/lg/pill) */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 24px;
+  --radius-2xl: 24px;
+  --radius-3xl: 999px;
+  --radius-4xl: 999px;
+}
+
+/* ========================================
+   Clara's Soap design tokens (ported verbatim from styles.css)
+   Pink floral, brown, gold aesthetic
+   ======================================== */
+
+:root {
+  /* Light Mode Color Palette */
+  --primary-pink: #C54174;
+  --primary-pink-dark: #D89EB3;
+  --accent-pink: #F5D4E1;
+  --brown: #8B6F47;
+  --brown-dark: #6B5638;
+  --gold: #C9A961;
+  --gold-light: #E6D5A8;
+  --cream: #FAF7F2;
+
+  /* Semantic Colors */
+  --bg-primary: #FAF7F2;
+  --bg-secondary: #FFFFFF;
+  --text-primary: #333333;
+  --text-secondary: #888888;
+  --border-color: #F5F5F5;
+
+  /* Transitions - smooth, exponential ease-out throughout */
+  --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-snappy: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  --transition-buttery: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-creamy: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* shadcn semantic vars mapped onto Clara's palette */
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--bg-secondary);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-secondary);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--primary-pink);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--accent-pink);
+  --secondary-foreground: var(--brown-dark);
+  --muted: #F5F5F5;
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--gold-light);
+  --accent-foreground: var(--brown-dark);
+  --destructive: #A94442;
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-pink);
+  --radius: 16px;
+}
+
+/* Dark Mode Color Palette - Cozy Night */
+[data-theme="dark"] {
+  --primary-pink: #D4A5A5;
+  --primary-pink-dark: #C49090;
+  --accent-pink: #8B6F7D;
+  --brown: #B8936F;
+  --brown-dark: #AE865C;
+  --gold: #E6C896;
+  --gold-light: #F5DDB0;
+  --cream: #2C2420;
+
+  /* Semantic Colors */
+  --bg-primary: #2C2420;
+  --bg-secondary: #3A332E;
+  --text-primary: #E8DDD4;
+  --text-secondary: #B8A89D;
+  --border-color: #453D38;
+
+  --primary-foreground: #2C2420;
+  --secondary-foreground: #F5DDB0;
+  --muted: #453D38;
+  --accent-foreground: #F5DDB0;
+  --destructive: #D98880;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--brown-dark);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+}
+
+/* ========================================
+   Hand-drawn hero illustration (placeholder until real photography)
+   ======================================== */
+
+.hero-illustration .ill-fill {
+  fill: var(--bg-secondary);
+  stroke: var(--brown-dark);
+  stroke-width: 3;
+}
+
+.hero-illustration .ill-line {
+  fill: none;
+  stroke: var(--brown-dark);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero-illustration .ill-bud {
+  fill: var(--primary-pink-dark);
+  fill-opacity: 0.6;
+  stroke: var(--brown-dark);
+  stroke-width: 2;
+}
+
+.hero-illustration .ill-flourish {
+  stroke: var(--gold);
+  opacity: 0.7;
+}
+
+[data-theme="dark"] .hero-illustration .ill-fill,
+[data-theme="dark"] .hero-illustration .ill-line,
+[data-theme="dark"] .hero-illustration .ill-bud {
+  stroke: var(--gold-light);
+}
+
+/* Gentle vertical drift (scroll indicator) */
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
