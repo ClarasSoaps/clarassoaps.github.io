@@ -32,18 +32,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add butter-smooth hover effects to product cards
-const productCards = document.querySelectorAll('.product-card');
-productCards.forEach(card => {
-    card.addEventListener('mouseenter', function(e) {
-        this.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    });
-    
-    card.addEventListener('mouseleave', function(e) {
-        this.style.transition = 'all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
-    });
-});
-
 // Add ripple effect to buttons
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach(button => {
@@ -118,7 +106,7 @@ if (cartCount) {
     const observer = new MutationObserver(() => {
         cartCount.style.animation = 'none';
         setTimeout(() => {
-            cartCount.style.animation = 'cartPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            cartCount.style.animation = 'cartPulse 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
         }, 10);
     });
     

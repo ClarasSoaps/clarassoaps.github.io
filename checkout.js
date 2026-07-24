@@ -315,7 +315,7 @@ function renderPayPalButton() {
             });
         },
 
-        onError:  err  => { console.error(err); alert('Payment error — please try again or use Venmo/Zelle.'); },
+        onError:  err  => { console.error(err); cart.showNotification('Payment error — please try again or use Venmo/Zelle.', 'error'); },
         onCancel: ()   => {}
     }).render('#paypal-button-container');
 }

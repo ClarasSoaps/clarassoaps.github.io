@@ -135,9 +135,8 @@ class ShoppingCart {
         }
     }
     
-    // Show notification
-    showNotification(message) {
-        // Simple alert for now - can be replaced with toast notification
+    // Show notification (type: 'success' | 'error')
+    showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.className = 'cart-notification';
         notification.textContent = message;
@@ -145,21 +144,22 @@ class ShoppingCart {
             position: fixed;
             top: 100px;
             right: 20px;
-            background-color: var(--primary-pink);
+            background-color: ${type === 'error' ? 'var(--brown-dark)' : 'var(--primary-pink)'};
             color: white;
             padding: 1rem 2rem;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             z-index: 3000;
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         `;
-        
+
         document.body.appendChild(notification);
-        
+
+        const holdTime = type === 'error' ? 4000 : 2000;
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.style.animation = 'slideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
             setTimeout(() => notification.remove(), 300);
-        }, 2000);
+        }, holdTime);
     }
     
     // Clear cart
@@ -197,7 +197,7 @@ function handleNewsletterSignup(event) {
     event.preventDefault();
     const email = event.target.querySelector('input[type="email"]').value;
     // In production, this would send to a backend service
-    alert(`Thank you for subscribing! We'll send updates to ${email}`);
+    cart.showNotification(`Thanks for subscribing, ${email}!`);
     event.target.reset();
 }
 

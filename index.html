@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -67,33 +67,35 @@
     </header>
 
     <main>
-        <!-- Full Screen Logo Landing -->
-        <section class="logo-landing">
-            <!-- Floating Floral Elements -->
-            <div class="floating-flowers">
-                <span class="flower flower-1">✿</span>
-                <span class="flower flower-2">❀</span>
-                <span class="flower flower-3">✿</span>
-                <span class="flower flower-4">❀</span>
-            </div>
-            
-            <div class="landing-content">
-                <img src="Claras_Soap_Logo.png" alt="Clara's Soap" class="landing-logo">
-                <p class="landing-tagline">Handcrafted with Love</p>
-            </div>
-            
+        <!-- Hero -->
+        <section class="hero-page">
+            <img src="Claras_Soap_Logo.png" alt="Clara's Soap" class="hero-signature">
+            <p class="hero-note">Handcrafted with Love</p>
+
+            <!-- Placeholder illustration until real product photography is added -->
+            <svg class="hero-illustration" viewBox="0 0 480 340" role="img" aria-label="A hand-drawn sketch of a bar of soap with a sprig of lavender resting on top">
+                <path class="ill-fill" d="M70,190 C65,165 80,145 110,138 C160,126 280,124 320,138 C345,147 348,175 335,198 C320,222 280,232 220,233 C150,234 95,224 78,210 C72,205 71,198 70,190 Z" />
+                <path class="ill-line" d="M105,152 C160,144 260,143 315,155" />
+                <path class="ill-line" d="M100,168 C160,161 265,160 320,172" />
+                <path class="ill-line" d="M300,40 C285,75 260,105 235,140 C228,150 225,155 222,158" />
+                <path class="ill-line" d="M312,48 C300,60 293,62 283,58" />
+                <path class="ill-line" d="M296,66 C285,78 278,80 268,76" />
+                <ellipse class="ill-bud" cx="296" cy="52" rx="5" ry="9" transform="rotate(-32 296 52)" />
+                <ellipse class="ill-bud" cx="286" cy="68" rx="5" ry="9" transform="rotate(-32 286 68)" />
+                <ellipse class="ill-bud" cx="277" cy="83" rx="5" ry="9" transform="rotate(-32 277 83)" />
+                <ellipse class="ill-bud" cx="268" cy="98" rx="5" ry="9" transform="rotate(-32 268 98)" />
+                <ellipse class="ill-bud" cx="259" cy="113" rx="5" ry="9" transform="rotate(-32 259 113)" />
+                <ellipse class="ill-bud" cx="250" cy="128" rx="5" ry="9" transform="rotate(-32 250 128)" />
+                <path class="ill-line ill-flourish" d="M62,268 C66,262 74,262 76,270 C80,262 88,263 88,271 C88,279 78,284 76,284 C74,284 62,278 62,268 Z" />
+            </svg>
+
+            <h1 class="hero-title">Handcrafted Soaps for All Seasons</h1>
+            <p class="hero-subtitle">Luxurious, natural soaps made with love</p>
+            <a href="shop.html" class="btn btn-primary">Shop Now</a>
+
             <div class="scroll-indicator">
                 <span>↓</span>
                 <p class="scroll-text">Scroll to Explore</p>
-            </div>
-        </section>
-
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">Handcrafted Soaps for All Seasons</h1>
-                <p class="hero-subtitle">Luxurious, natural soaps made with love</p>
-                <a href="shop.html" class="btn btn-primary">Shop Now</a>
             </div>
         </section>
 
@@ -276,7 +278,7 @@
     <script>
         // Smooth scroll when clicking the scroll indicator
         document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
-            document.querySelector('.hero').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('.featured-section').scrollIntoView({ behavior: 'smooth' });
         });
         
         // Scroll Reveal Animation
