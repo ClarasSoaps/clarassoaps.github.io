@@ -1,25 +1,24 @@
-name: Deploy site
+name: Build and publish site
+
+# GitHub Pages here serves plain files from main's root, and changing that
+# source needs repo-admin access we don't have. So this workflow builds the
+# static export and commits the result back into the root, where Pages will
+# pick it up. Source lives in app/, components/, lib/, public/ as usual.
 
 on:
   push:
     branches: [main]
-  # Lets you re-run a deploy by hand from the Actions tab.
   workflow_dispatch:
 
-# Allow the workflow to publish to GitHub Pages.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# If two pushes land close together, let the newer one finish rather than
-# cancelling it midway through a deploy.
 concurrency:
-  group: pages
+  group: publish
   cancel-in-progress: false
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,16 +28,15 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
       - name: Build static site
         run: npm run build
         env:
-          # Checkout credentials. Add these under
+          # Checkout credentials, set under
           # Settings → Secrets and variables → Actions → Variables.
-          # Missing values are fine: PayPal shows a "not configured" notice
-          # and no order emails are sent.
+          # Leaving them unset is safe: PayPal shows a "not configured"
+          # notice and no order emails are sent.
           NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${{ vars.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
           NEXT_PUBLIC_VENMO_USERNAME: ${{ vars.NEXT_PUBLIC_VENMO_USERNAME }}
           NEXT_PUBLIC_ZELLE_CONTACT: ${{ vars.NEXT_PUBLIC_ZELLE_CONTACT }}
@@ -48,18 +46,20 @@ jobs:
           NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID: ${{ vars.NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID }}
           NEXT_PUBLIC_EMAILJS_CLARA_TEMPLATE_ID: ${{ vars.NEXT_PUBLIC_EMAILJS_CLARA_TEMPLATE_ID }}
 
-      - uses: actions/configure-pages@v5
+      - name: Copy build output into the repo root
+        # Copies only; never deletes, so app/ and friends are untouched.
+        run: rsync -a --exclude='.git' out/ ./
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit the published site
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Build output unchanged — nothing to publish."
+            exit 0
+          fi
+          # [skip ci] belt-and-braces; pushes made with GITHUB_TOKEN do not
+          # retrigger workflows anyway.
+          git commit -m "Publish site build [skip ci]"
+          git push
