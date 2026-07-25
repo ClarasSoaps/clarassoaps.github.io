@@ -36,7 +36,7 @@ export function MobileCart() {
       <aside
         aria-label="Basket"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-[90] flex max-h-[85vh] flex-col rounded-t-3xl bg-card shadow-2xl transition-transform duration-300",
+          "fixed inset-x-0 bottom-0 z-[90] flex max-h-[85vh] flex-col rounded-t-[24px] bg-card shadow-2xl transition-transform duration-300",
           isOpen ? "translate-y-0" : "translate-y-full"
         )}
       >

@@ -92,7 +92,7 @@ export function MobileNav() {
         role="dialog"
         aria-label="More menu"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-[80] rounded-t-3xl bg-card pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-2 shadow-2xl transition-transform duration-300",
+          "fixed inset-x-0 bottom-0 z-[80] rounded-t-[24px] bg-card pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-2 shadow-2xl transition-transform duration-300",
           moreOpen ? "translate-y-0" : "translate-y-full"
         )}
       >
