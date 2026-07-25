@@ -27,15 +27,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Clara's palette exposed as Tailwind color utilities */
-  --color-primary-pink: var(--primary-pink);
-  --color-primary-pink-dark: var(--primary-pink-dark);
-  --color-accent-pink: var(--accent-pink);
-  --color-brown: var(--brown);
-  --color-brown-dark: var(--brown-dark);
-  --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-cream: var(--cream);
+  /* Earthy forest palette exposed as Tailwind color utilities */
+  --color-dust: var(--dust);
+  --color-sage: var(--sage);
+  --color-fern: var(--fern);
+  --color-hunter: var(--hunter);
+  --color-pine: var(--pine);
 
   /* Fonts (wired to next/font variables in app/layout.tsx) */
   --font-sans: var(--font-body);
@@ -53,27 +50,24 @@
 }
 
 /* ========================================
-   Clara's Soap design tokens (ported verbatim from styles.css)
-   Pink floral, brown, gold aesthetic
+   Clara's Soap design tokens
+   Earthy forest hues on white paper
    ======================================== */
 
 :root {
-  /* Light Mode Color Palette */
-  --primary-pink: #C54174;
-  --primary-pink-dark: #D89EB3;
-  --accent-pink: #F5D4E1;
-  --brown: #8B6F47;
-  --brown-dark: #6B5638;
-  --gold: #C9A961;
-  --gold-light: #E6D5A8;
-  --cream: #FAF7F2;
+  /* Earthy Forest palette */
+  --dust: #dad7cd;   /* Dust Grey  — soft stone */
+  --sage: #a3b18a;   /* Dry Sage   — sunlit herb */
+  --fern: #588157;   /* Fern       — sunlit leaves */
+  --hunter: #3a5a40; /* Hunter     — forest canopy */
+  --pine: #344e41;   /* Pine Teal  — pine needles */
 
   /* Semantic Colors */
-  --bg-primary: #FAF7F2;
-  --bg-secondary: #FFFFFF;
-  --text-primary: #333333;
-  --text-secondary: #888888;
-  --border-color: #F5F5F5;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F7F8F5;
+  --text-primary: #2C3A30;
+  --text-secondary: #66735F;
+  --border-color: #dad7cd;
 
   /* Transitions - smooth, exponential ease-out throughout */
   --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -82,50 +76,50 @@
   --transition-buttery: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-creamy: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* shadcn semantic vars mapped onto Clara's palette */
+  /* shadcn semantic vars mapped onto the forest palette */
   --background: var(--bg-primary);
   --foreground: var(--text-primary);
   --card: var(--bg-secondary);
   --card-foreground: var(--text-primary);
   --popover: var(--bg-secondary);
   --popover-foreground: var(--text-primary);
-  --primary: var(--primary-pink);
+  --primary: var(--fern);
   --primary-foreground: #FFFFFF;
-  --secondary: var(--accent-pink);
-  --secondary-foreground: var(--brown-dark);
-  --muted: #F5F5F5;
+  --secondary: var(--dust);
+  --secondary-foreground: var(--pine);
+  --muted: #EFF1EB;
   --muted-foreground: var(--text-secondary);
-  --accent: var(--gold-light);
-  --accent-foreground: var(--brown-dark);
+  --accent: var(--sage);
+  --accent-foreground: var(--pine);
   --destructive: #A94442;
   --border: var(--border-color);
   --input: var(--border-color);
-  --ring: var(--primary-pink);
+  --ring: var(--fern);
   --radius: 16px;
 }
 
-/* Dark Mode Color Palette - Cozy Night */
+/* Dark Mode - Forest at dusk */
 [data-theme="dark"] {
-  --primary-pink: #D4A5A5;
-  --primary-pink-dark: #C49090;
-  --accent-pink: #8B6F7D;
-  --brown: #B8936F;
-  --brown-dark: #AE865C;
-  --gold: #E6C896;
-  --gold-light: #F5DDB0;
-  --cream: #2C2420;
+  --dust: #4A5750;
+  --sage: #B7C4A2;
+  --fern: #7FA277;
+  --hunter: #A9BFA4;
+  --pine: #C6D6C4;
 
   /* Semantic Colors */
-  --bg-primary: #2C2420;
-  --bg-secondary: #3A332E;
-  --text-primary: #E8DDD4;
-  --text-secondary: #B8A89D;
-  --border-color: #453D38;
+  --bg-primary: #1C2620;
+  --bg-secondary: #25322A;
+  --text-primary: #E6EDE4;
+  --text-secondary: #A6B3A2;
+  --border-color: #3A4A3F;
 
-  --primary-foreground: #2C2420;
-  --secondary-foreground: #F5DDB0;
-  --muted: #453D38;
-  --accent-foreground: #F5DDB0;
+  --primary: #7FA277;
+  --primary-foreground: #14201A;
+  --secondary: #3A4A3F;
+  --secondary-foreground: #E6EDE4;
+  --muted: #2E3B33;
+  --accent: #7FA277;
+  --accent-foreground: #14201A;
   --destructive: #D98880;
 }
 
@@ -137,16 +131,20 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 18px;
+    line-height: 1.65;
     transition: background-color 0.4s ease, color 0.4s ease;
+
+    /* Faint paper tooth — keeps white reading as stock, not screen glare */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+    background-repeat: repeat;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    font-weight: 500;
-    line-height: 1.2;
-    color: var(--brown-dark);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--pine);
   }
 
   html {
@@ -156,39 +154,209 @@
 }
 
 /* ========================================
+   Page-at-a-time scrolling (home page)
+   ======================================== */
+
+/* The behaviour lives in components/snap-scroll.tsx, which drives the scroll
+   itself so the takeover is immediate. CSS scroll-snap is deliberately NOT
+   used here — the two would fight over the same scroll position. `.snap-section`
+   is the marker class that component reads. */
+.snap-section {
+  scroll-margin-top: 7rem;
+}
+
+/* ========================================
    Hand-drawn hero illustration (placeholder until real photography)
    ======================================== */
 
 .hero-illustration .ill-fill {
   fill: var(--bg-secondary);
-  stroke: var(--brown-dark);
+  stroke: var(--hunter);
   stroke-width: 3;
 }
 
 .hero-illustration .ill-line {
   fill: none;
-  stroke: var(--brown-dark);
+  stroke: var(--hunter);
   stroke-width: 3;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .hero-illustration .ill-bud {
-  fill: var(--primary-pink-dark);
-  fill-opacity: 0.6;
-  stroke: var(--brown-dark);
+  fill: var(--sage);
+  fill-opacity: 0.7;
+  stroke: var(--hunter);
   stroke-width: 2;
 }
 
-.hero-illustration .ill-flourish {
-  stroke: var(--gold);
-  opacity: 0.7;
+/* TEMPORARY: the logo PNG is still the old pink artwork. This shifts it into
+   the forest palette so it stops fighting the page. Delete this rule once a
+   green logo file replaces Claras_Soap_Logo.png. */
+.brand-mark {
+  filter: hue-rotate(155deg) saturate(0.5) brightness(0.62);
 }
 
-[data-theme="dark"] .hero-illustration .ill-fill,
-[data-theme="dark"] .hero-illustration .ill-line,
-[data-theme="dark"] .hero-illustration .ill-bud {
-  stroke: var(--gold-light);
+[data-theme="dark"] .brand-mark {
+  filter: hue-rotate(155deg) saturate(0.35) brightness(1.35);
+}
+
+/* Product soap sketches (same ink language as the hero).
+   These use fixed ink values, NOT theme variables — the drawings must look
+   identical in light and dark mode. Dark mode gives them a paper backing
+   below so the unchanged ink stays legible. */
+.soap-sketch .s-bar {
+  fill-opacity: 0.6;
+  stroke: #3a5a40;
+  stroke-width: 2.5;
+}
+
+.soap-sketch .s-line {
+  fill: none;
+  stroke: #3a5a40;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.soap-sketch .s-bud {
+  fill: #a3b18a;
+  fill-opacity: 0.7;
+  stroke: #3a5a40;
+  stroke-width: 1.5;
+}
+
+[data-theme="dark"] .soap-sketch {
+  background: #F4F3EE;
+  border-radius: 18px;
+  padding: 4px;
+}
+
+/* Clara's cats — fixed ink, same in both themes */
+.cat-sketch .c-fill {
+  fill: #F0EFE8;
+  stroke: #3a5a40;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.cat-sketch .c-line {
+  fill: none;
+  stroke: #3a5a40;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cat-sketch .c-solid {
+  fill: #588157;
+  opacity: 0.55;
+}
+
+/* Peeking cat (hides behind the header) */
+.peeking-cat .c-fill {
+  fill: #F0EFE8;
+  stroke: #3a5a40;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.peeking-cat .c-line {
+  fill: none;
+  stroke: #3a5a40;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.peeking-cat .c-eye {
+  fill: #3a5a40;
+}
+
+.peeking-cat .c-glint {
+  fill: #FFFFFF;
+}
+
+.peeking-cat .c-blush {
+  fill: #E39BA8;
+  opacity: 0.4;
+}
+
+.peeking-cat .c-bean {
+  fill: #D98A9A;
+  opacity: 0.85;
+}
+
+.peeking-cat .c-tongue {
+  fill: #D98A9A;
+  stroke: #3a5a40;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+/* --- idle life ---------------------------------------------------------
+   These animate `transform`; the peek slide uses the separate `translate`
+   property, so the two never overwrite each other. */
+
+/* breathing */
+.peeking-cat {
+  animation: catBreathe 3.4s ease-in-out infinite;
+}
+
+@keyframes catBreathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2.5px); }
+}
+
+/* a blink every few seconds */
+.peeking-cat .cat-eyes {
+  transform-origin: 50px 58px;
+  animation: catBlink 5.5s ease-in-out infinite;
+}
+
+@keyframes catBlink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94%, 95.5% { transform: scaleY(0.08); }
+}
+
+/* one ear flicks, then the other */
+.peeking-cat .cat-ear-l {
+  transform-origin: 38px 42px;
+  animation: catEarFlick 7s ease-in-out infinite;
+}
+
+.peeking-cat .cat-ear-r {
+  transform-origin: 62px 42px;
+  animation: catEarFlick 7s ease-in-out 3.5s infinite;
+}
+
+@keyframes catEarFlick {
+  0%, 88%, 100% { transform: rotate(0deg); }
+  91% { transform: rotate(-10deg); }
+  94% { transform: rotate(6deg); }
+}
+
+/* paws knead very slightly, out of step with each other */
+.peeking-cat .cat-paw-l {
+  transform-origin: 33px 100px;
+  animation: catKnead 2.6s ease-in-out infinite;
+}
+
+.peeking-cat .cat-paw-r {
+  transform-origin: 67px 100px;
+  animation: catKnead 2.6s ease-in-out 1.3s infinite;
+}
+
+@keyframes catKnead {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-1.5px) rotate(-2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peeking-cat,
+  .peeking-cat * {
+    animation: none !important;
+  }
 }
 
 /* Gentle vertical drift (scroll indicator) */
