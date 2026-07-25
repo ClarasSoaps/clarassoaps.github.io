@@ -7,6 +7,8 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { PeekingCat } from "@/components/peeking-cat";
+import { MobileNav } from "@/components/mobile/mobile-nav";
+import { MobileCart } from "@/components/mobile/mobile-cart";
 import "./globals.css";
 
 const vollkorn = Vollkorn({
@@ -69,11 +71,24 @@ export default function RootLayout({
           enableSystem={false}
         >
           <CartProvider>
-            <Navbar />
-            <PeekingCat />
-            <main className="flex-1 pt-28">{children}</main>
+            {/* Desktop chrome (hidden on phones) */}
+            <div className="hidden lg:block">
+              <Navbar />
+              <PeekingCat />
+            </div>
+
+            {/* Mobile chrome (hidden on desktop) */}
+            <MobileNav />
+
+            <main className="flex-1 pb-24 pt-[6.5rem] lg:pb-0 lg:pt-28">
+              {children}
+            </main>
             <Footer />
-            <CartSidebar />
+
+            <div className="hidden lg:block">
+              <CartSidebar />
+            </div>
+            <MobileCart />
             <Toaster
               position="top-right"
               toastOptions={{

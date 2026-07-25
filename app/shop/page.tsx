@@ -3,6 +3,7 @@
 import * as React from "react";
 import { getAllProducts } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
+import { MobileProductCard } from "@/components/mobile/mobile-product-card";
 import { Squiggle } from "@/components/squiggle";
 import { cn } from "@/lib/utils";
 import type { ScentFamily } from "@/lib/types";
@@ -107,11 +108,20 @@ export default function ShopPage() {
           No soaps match those filters — try widening your search.
         </p>
       ) : (
-        <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <>
+          {/* Mobile: 2-up compact grid */}
+          <div className="mt-10 grid grid-cols-2 gap-4 lg:hidden">
+            {filtered.map((p) => (
+              <MobileProductCard key={p.id} product={p} />
+            ))}
+          </div>
+          {/* Desktop grid */}
+          <div className="mt-16 hidden gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid lg:grid-cols-3">
+            {filtered.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

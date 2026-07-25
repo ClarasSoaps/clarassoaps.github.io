@@ -10,6 +10,7 @@ import { NewsletterForm } from "@/components/newsletter-form";
 import { Reveal } from "@/components/reveal";
 import { ScrollIndicator } from "@/components/scroll-indicator";
 import { Squiggle } from "@/components/squiggle";
+import { MobileHome } from "@/components/mobile/mobile-home";
 
 export default function Home() {
   const all = getAllProducts();
@@ -18,6 +19,9 @@ export default function Home() {
 
   return (
     <>
+      <MobileHome />
+
+      <div className="hidden lg:block">
       <SnapScroll />
 
       {/* Hero */}
@@ -98,6 +102,7 @@ export default function Home() {
           <NewsletterForm />
         </section>
       </Reveal>
+      </div>
     </>
   );
 }
